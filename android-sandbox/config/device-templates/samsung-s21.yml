@@ -1,0 +1,82 @@
+# Samsung Galaxy S21 Device Template
+# Samsung Galaxy S21 running Android 11
+
+name: "Samsung Galaxy S21"
+manufacturer: "Samsung"
+model: "SM-G991B"
+android:
+  version: "11"
+  api_level: 30
+  build_number: "RP1A.200720.012.G991BXXU3AUDA7"
+  security_patch: "2021-10-01"
+  google_apis: true
+  play_store: false
+
+hardware:
+  screen:
+    resolution: "1080x2400"
+    density: 480
+    size_inches: 6.2
+  cpu:
+    cores: 8
+    architecture: "x86_64"
+  ram_mb: 8192
+  storage_gb: 256
+  sensors:
+    - "accelerometer"
+    - "gyroscope"
+    - "light"
+    - "proximity"
+    - "compass"
+    - "gps"
+    - "fingerprint"
+    - "heart_rate"
+  camera:
+    rear_mp: 12.0
+    front_mp: 10.0
+
+network:
+  wifi:
+    enabled: true
+    standards: ["802.11ac", "802.11ax"]
+  mobile:
+    enabled: true
+    type: "5G"
+    carrier: "Virtual Carrier"
+  bluetooth:
+    enabled: true
+    version: "5.2"
+
+system:
+  root_access: true
+  developer_options: true
+  usb_debugging: true
+  stay_awake: true
+  mock_location: true
+  allow_unknown_sources: true
+
+analysis:
+  tools: ["frida", "tcpdump", "strace", "logcat"]
+  auto_start: true
+  capture_network: true
+  capture_system_calls: true
+
+security:
+  selinux: "permissive"
+  verified_boot: false
+  encryption: false
+  screen_lock: false
+  knox: false
+
+# Samsung-specific properties
+properties:
+  ro.product.model: "SM-G991B"
+  ro.product.brand: "samsung"
+  ro.product.name: "z3s"
+  ro.product.device: "z3s"
+  ro.build.version.release: "11"
+  ro.build.version.sdk: "30"
+  ro.build.version.security_patch: "2021-10-01"
+  ro.hardware: "exynos"
+  ro.board.platform: "exynos2100"
+  ro.chipname: "exynos2100"
