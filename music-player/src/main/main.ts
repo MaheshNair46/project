@@ -18,6 +18,7 @@ function createWindow(): void {
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
+      webSecurity: false, // Allow local file access
       preload: join(__dirname, '../preload/preload.js'),
     },
     titleBarStyle: 'hiddenInset',
