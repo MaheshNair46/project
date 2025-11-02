@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  # Android Sandbox Management API
+  api:
+    build:
+      context: ./dashboard/server
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - JWT_SECRET=your-jwt-secret-key
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config:/app/config
+      - ./scripts:/app/scripts
+    networks:
+      - android-sandbox-mgmt
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Web Dashboard
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:3000/api/v1
+    depends_on:
+      - api
+    networks:
+      - android-sandbox-mgmt
+    restart: unless-stopped
+
+  # Redis for session management and caching
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - android-sandbox-mgmt
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # PostgreSQL for configuration and audit logs
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=android_sandbox
+      - POSTGRES_USER=sandbox_admin
+      - POSTGRES_PASSWORD=sandbox_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./dashboard/server/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - android-sandbox-mgmt
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sandbox_admin -d android_sandbox"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  android-sandbox-mgmt:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  redis_data:
+  postgres_data:
