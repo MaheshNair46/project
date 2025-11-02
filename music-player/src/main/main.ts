@@ -1,8 +1,7 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
-import { join } from 'path';
+import { join, extname } from 'path';
 import { readdir } from 'fs/promises';
 import { stat } from 'fs/promises';
-import { extension } from 'path';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -17,7 +16,6 @@ function createWindow(): void {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      enableRemoteModule: false,
       webSecurity: false, // Allow local file access
       preload: join(__dirname, '../preload/preload.js'),
     },
