@@ -1,0 +1,99 @@
+# Standard Network Profile
+# Basic network configuration for general security research
+
+name: "Standard Network"
+description: "Standard network configuration with internet access"
+
+type: "custom_bridge"
+isolation: "full"
+
+# IP Configuration
+ip:
+  allocation: "static"
+  range: "192.168.100.0/24"
+  gateway: "192.168.100.1"
+  dns_servers:
+    - "8.8.8.8"
+    - "8.8.4.4"
+  ntp_servers:
+    - "pool.ntp.org"
+
+# Network Interface Configuration
+interfaces:
+  primary:
+    name: "eth0"
+    enabled: true
+    mtu: 1500
+    ipv4:
+      enabled: true
+      dhcp: false
+    ipv6:
+      enabled: false
+
+# Routing Configuration
+routing:
+  default_route: "192.168.100.1"
+  custom_routes: []
+
+# Proxy Configuration
+proxy:
+  enabled: false
+  http_proxy: ""
+  https_proxy: ""
+  bypass_list: ["localhost", "127.0.0.1", "*.local"]
+
+# Firewall Rules
+firewall:
+  enabled: true
+  default_policy: "ACCEPT"
+  rules:
+    - action: "ACCEPT"
+      protocol: "tcp"
+      destination_port: [80, 443]
+      description: "Allow HTTP/HTTPS"
+    - action: "ACCEPT"
+      protocol: "tcp"
+      destination_port: [53]
+      description: "Allow DNS"
+    - action: "ACCEPT"
+      protocol: "udp"
+      destination_port: [53]
+      description: "Allow DNS"
+    - action: "ACCEPT"
+      protocol: "icmp"
+      description: "Allow ping"
+
+# Traffic Shaping
+traffic_shaping:
+  enabled: false
+  bandwidth_limit_kbps: 0
+  latency_ms: 0
+  packet_loss_percent: 0
+
+# DNS Configuration
+dns:
+  custom_hosts: {}
+  dns_over_https:
+    enabled: false
+    provider: ""
+  dnssec:
+    enabled: false
+
+# NAT Configuration
+nat:
+  enabled: true
+  masquerade: true
+  port_forwarding: []
+
+# Monitoring
+monitoring:
+  packet_capture: false
+  connection_tracking: true
+  bandwidth_monitoring: true
+
+# Security Settings
+security:
+  arp_spoofing_protection: true
+  ip_spoofing_protection: true
+  mac_filtering: false
+  allowed_macs: []
