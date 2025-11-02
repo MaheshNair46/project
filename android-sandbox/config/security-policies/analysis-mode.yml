@@ -1,0 +1,195 @@
+# Analysis Mode Security Policy
+# Security policy designed for malware analysis and reverse engineering
+
+name: "Analysis Mode"
+description: "Security policy optimized for malware analysis and reverse engineering"
+
+# Device Security
+device:
+  selinux: "permissive"
+  verified_boot: false
+  encryption: false
+  screen_lock: false
+
+  # App Installation
+  allow_unknown_sources: true
+  allow_debug_apps: true
+  install_from_adb: true
+
+  # System Modifications
+  system_app_modification: true
+  framework_modification: true
+  bootloader_unlocked: true
+
+# Application Permissions
+permissions:
+  # Dangerous permissions (auto-granted for analysis)
+  auto_grant:
+    - "android.permission.INTERNET"
+    - "android.permission.READ_EXTERNAL_STORAGE"
+    - "android.permission.WRITE_EXTERNAL_STORAGE"
+    - "android.permission.ACCESS_FINE_LOCATION"
+    - "android.permission.ACCESS_COARSE_LOCATION"
+    - "android.permission.CAMERA"
+    - "android.permission.RECORD_AUDIO"
+    - "android.permission.READ_CONTACTS"
+    - "android.permission.WRITE_CONTACTS"
+    - "android.permission.READ_SMS"
+    - "android.permission.SEND_SMS"
+    - "android.permission.RECEIVE_SMS"
+    - "android.permission.READ_PHONE_STATE"
+    - "android.permission.CALL_PHONE"
+    - "android.permission.PROCESS_OUTGOING_CALLS"
+    - "android.permission.GET_ACCOUNTS"
+    - "android.permission.READ_CALENDAR"
+    - "android.permission.WRITE_CALENDAR"
+    - "android.permission.ACCESS_NETWORK_STATE"
+    - "android.permission.CHANGE_NETWORK_STATE"
+    - "android.permission.ACCESS_WIFI_STATE"
+    - "android.permission.CHANGE_WIFI_STATE"
+    - "android.permission.BLUETOOTH"
+    - "android.permission.BLUETOOTH_ADMIN"
+    - "android.permission.SYSTEM_ALERT_WINDOW"
+    - "android.permission.DEVICE_POWER"
+    - "android.permission.REBOOT"
+    - "android.permission.DISABLE_KEYGUARD"
+    - "android.permission.WAKE_LOCK"
+
+  # Runtime permissions (auto-approved)
+  runtime_auto_approve: true
+
+# Network Security
+network:
+  # SSL/TLS
+  trust_all_certificates: true
+  disable_certificate_pinning: true
+  allow_self_signed_certs: true
+
+  # HTTP/HTTPS
+  cleartext_traffic_permitted: true
+  allow_http_traffic: true
+
+  # Network Analysis
+  enable_packet_capture: true
+  enable_ssl_unpinning: true
+
+  # Proxy Configuration
+  allow_system_proxy: true
+  allow_app_proxy: true
+
+# System Security Bypasses
+security_bypasses:
+  # SafetyNet/Play Integrity
+  bypass_safetynet: true
+  bypass_play_integrity: true
+
+  # Root Detection
+  hide_root: false  # Keep root visible for analysis
+  disable_root_detection: true
+
+  # Debugger Detection
+  disable_debugger_detection: true
+  allow_debugger_attach: true
+
+  # Emulator Detection
+  disable_emulator_detection: true
+
+  # Anti-Tampering
+  disable_integrity_checks: true
+  allow_code_modification: true
+
+# Analysis Tools Configuration
+analysis_tools:
+  frida:
+    enabled: true
+    auto_start: true
+    scripts:
+      - "ssl-unpinning.js"
+      - "anti-detection-bypass.js"
+      - "network-monitoring.js"
+      - "crypto-hooks.js"
+    permissions:
+      - "process-injection"
+      - "memory-access"
+      - "function-hooking"
+
+  strace:
+    enabled: true
+    auto_start: true
+    filter: "network,file,process"
+    output_format: "detailed"
+
+  tcpdump:
+    enabled: true
+    auto_start: true
+    interfaces: ["eth0", "lo"]
+    filters: "not port 22"
+
+  logcat:
+    enabled: true
+    log_level: "verbose"
+    filters: ["*"]
+    buffer_size: "4MB"
+
+# Data Persistence
+data_persistence:
+  # App Data
+  preserve_app_data: true
+  backup_app_data: true
+  auto_backup_interval: 3600  # seconds
+
+  # System Data
+  preserve_system_logs: true
+  preserve_network_captures: true
+  preserve_crash_dumps: true
+
+  # Analysis Data
+  preserve_analysis_results: true
+  analysis_data_retention_days: 30
+
+# Monitoring and Alerting
+monitoring:
+  # Real-time Monitoring
+  process_monitoring: true
+  network_monitoring: true
+  file_system_monitoring: true
+  system_call_monitoring: true
+
+  # Behavior Analysis
+  suspicious_behavior_detection: true
+  anomaly_detection: true
+
+  # Alerts
+  alerts_enabled: true
+  alert_methods: ["log", "webhook"]
+  webhook_url: "http://localhost:8080/alerts"
+
+# Access Control
+access_control:
+  # Remote Access
+  adb_enabled: true
+  adb_port: 5555
+  allow_remote_adb: true
+
+  # Shell Access
+  shell_access: true
+  allow_root_shell: true
+
+  # File Access
+  allow_system_file_access: true
+  allow_app_file_access: true
+
+# Backup and Recovery
+backup:
+  # Automatic Snapshots
+  auto_snapshot: true
+  snapshot_interval: 1800  # seconds
+  max_snapshots: 10
+
+  # Manual Snapshot
+  allow_manual_snapshot: true
+
+  # Recovery Options
+  allow_quick_reset: true
+  allow_full_reset: true
+  preserve_analysis_data_on_reset: true
