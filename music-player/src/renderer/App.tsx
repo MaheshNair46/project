@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import MainContent from './components/MainContent';
 import PlayerBar from './components/PlayerBar';
 import { Song, AppState } from '../shared/types';
+import audioService from './services/audioService';
 
 const initialState: AppState = {
   library: {
