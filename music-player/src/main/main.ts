@@ -82,7 +82,7 @@ ipcMain.handle('scan-directory', async (_, dirPath: string) => {
         if (entry.isDirectory()) {
           await scanDirectory(fullPath);
         } else if (entry.isFile()) {
-          const ext = extension(entry.name).toLowerCase();
+          const ext = extname(entry.name).toLowerCase();
           if (audioExtensions.includes(ext)) {
             audioFiles.push(fullPath);
           }
