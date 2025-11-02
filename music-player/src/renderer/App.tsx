@@ -49,6 +49,74 @@ function App() {
     }));
   };
 
+  // Audio service integration
+  useEffect(() => {
+    // Sync audio service state with app state
+    const handleTimeUpdate = (time: number) => {
+      updateState({ player: { currentTime: time } });
+    };
+
+    const handleEnded = () => {
+      updateState({ player: { isPlaying: false } });
+    };
+
+    audioService.addTimeUpdateListener(handleTimeUpdate);
+    audioService.addEndedListener(handleEnded);
+
+    return () => {
+      audioService.removeTimeUpdateListener(handleTimeUpdate);
+      audioService.removeEndedListener(handleEnded);
+    };
+  }, []);
+
+  const playSong = async (song: Song) => {
+    try {
+      await audioService.loadSong(song);
+      await audioService.play();
+      updateState({
+        player: {
+          currentSong: song,
+          isPlaying: true,
+          currentTime: 0,
+        }
+      });
+    } catch (error) {
+      console.error('Error playing song:', error);
+      updateState({
+        player: { isPlaying: false }
+      });
+    }
+  };
+
+  const togglePlayPause = async () => {
+    try {
+      if (audioService.getIsPlaying()) {
+        audioService.pause();
+        updateState({ player: { isPlaying: false } });
+      } else if (audioService.getCurrentSong()) {
+        await audioService.play();
+        updateState({ player: { isPlaying: true } });
+      } else if (state.library.songs.length > 0) {
+        // Play first song if no song is loaded
+        await playSong(state.library.songs[0]);
+      }
+    } catch (error) {
+      console.error('Error toggling playback:', error);
+      updateState({ player: { isPlaying: false } });
+    }
+  };
+
+  const changeVolume = (volume: number) => {
+    audioService.setVolume(volume);
+    updateState({ player: { volume } });
+  };
+
+  const toggleMute = () => {
+    const newMuted = !state.player.isMuted;
+    audioService.setMuted(newMuted);
+    updateState({ player: { isMuted: newMuted } });
+  };
+
   const selectMusicFolder = async () => {
     try {
       const folderPath = await window.electronAPI.selectMusicFolder();
