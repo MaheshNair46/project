@@ -1,0 +1,78 @@
+# Pixel 5 Device Template
+# Google Pixel 5 running Android 12
+
+name: "Pixel 5"
+manufacturer: "Google"
+model: "Pixel 5"
+android:
+  version: "12"
+  api_level: 31
+  build_number: "SQ3A.220605.009.A1"
+  security_patch: "2022-06-05"
+  google_apis: true
+  play_store: false
+
+hardware:
+  screen:
+    resolution: "1080x2340"
+    density: 440
+    size_inches: 6.0
+  cpu:
+    cores: 8
+    architecture: "x86_64"
+  ram_mb: 4096
+  storage_gb: 128
+  sensors:
+    - "accelerometer"
+    - "gyroscope"
+    - "light"
+    - "proximity"
+    - "compass"
+    - "gps"
+  camera:
+    rear_mp: 12.2
+    front_mp: 8.0
+
+network:
+  wifi:
+    enabled: true
+    standards: ["802.11ac", "802.11ax"]
+  mobile:
+    enabled: true
+    type: "5G"
+    carrier: "Virtual Carrier"
+  bluetooth:
+    enabled: true
+    version: "5.0"
+
+system:
+  root_access: true
+  developer_options: true
+  usb_debugging: true
+  stay_awake: true
+  mock_location: true
+  allow_unknown_sources: true
+
+analysis:
+  tools: ["frida", "tcpdump", "strace", "logcat"]
+  auto_start: true
+  capture_network: true
+  capture_system_calls: true
+
+security:
+  selinux: "permissive"
+  verified_boot: false
+  encryption: false
+  screen_lock: false
+
+# Additional device properties for identification
+properties:
+  ro.product.model: "Pixel 5"
+  ro.product.brand: "google"
+  ro.product.name: "redfin"
+  ro.product.device: "redfin"
+  ro.build.version.release: "12"
+  ro.build.version.sdk: "31"
+  ro.build.version.security_patch: "2022-06-05"
+  ro.hardware: "qcom"
+  ro.board.platform: "msmnile"
