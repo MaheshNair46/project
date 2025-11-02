@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const path_1 = require("path");
 const promises_1 = require("fs/promises");
-const path_2 = require("path");
 const isDev = process.env.NODE_ENV === 'development';
 let mainWindow = null;
 function createWindow() {
@@ -15,7 +14,6 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,
-            enableRemoteModule: false,
             webSecurity: false, // Allow local file access
             preload: (0, path_1.join)(__dirname, '../preload/preload.js'),
         },
@@ -73,7 +71,7 @@ electron_1.ipcMain.handle('scan-directory', async (_, dirPath) => {
                     await scanDirectory(fullPath);
                 }
                 else if (entry.isFile()) {
-                    const ext = (0, path_2.extension)(entry.name).toLowerCase();
+                    const ext = (0, path_1.extname)(entry.name).toLowerCase();
                     if (audioExtensions.includes(ext)) {
                         audioFiles.push(fullPath);
                     }
