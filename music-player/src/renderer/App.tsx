@@ -192,9 +192,7 @@ function App() {
           songs={state.library.songs}
           currentSong={state.player.currentSong}
           isPlaying={state.player.isPlaying}
-          onPlaySong={(song) => updateState({
-            player: { currentSong: song, isPlaying: true }
-          })}
+          onPlaySong={playSong}
         />
       </div>
       <PlayerBar
@@ -203,13 +201,9 @@ function App() {
         currentTime={state.player.currentTime}
         volume={state.player.volume}
         isMuted={state.player.isMuted}
-        onPlayPause={() => updateState({
-          player: { isPlaying: !state.player.isPlaying }
-        })}
-        onVolumeChange={(volume) => updateState({ player: { volume } })}
-        onMuteToggle={() => updateState({
-          player: { isMuted: !state.player.isMuted }
-        })}
+        onPlayPause={togglePlayPause}
+        onVolumeChange={changeVolume}
+        onMuteToggle={toggleMute}
       />
     </div>
   );
